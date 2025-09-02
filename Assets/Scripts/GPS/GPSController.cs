@@ -30,7 +30,9 @@ public class GPSController : MonoBehaviour
 
     private void Awake()
     {
+        #region debug
         Debug.Log("GPSController --- Step 1: Awake() method called.");
+        #endregion
 
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
@@ -40,14 +42,23 @@ public class GPSController : MonoBehaviour
 
     IEnumerator Start()
     {
+        #region debug
         Debug.Log("GPSController --- Step 2: Start() coroutine initiated.");
+        #endregion
 
         yield return new WaitForSeconds(1);
 
+        #region debug
         Debug.Log("GPSController --- Step 3: Checking for location permission.");
+        #endregion
+
         if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
+
+            #region debug
             Debug.Log("GPSController --- Step 4: Permission not found. Requesting it now.");
+            #endregion
+
             debugText.text = "Requesting location permission...";
             Permission.RequestUserPermission(Permission.FineLocation);
 
@@ -59,6 +70,7 @@ public class GPSController : MonoBehaviour
             }
         }
 
+        #region debug
         Debug.Log("GPSController --- Step 5: Finished permission check. Now checking if service is enabled.");
 
         if (!Input.location.isEnabledByUser)
@@ -68,8 +80,9 @@ public class GPSController : MonoBehaviour
             yield break;
         }
 
-        // --- DEBUG CHECKPOINT 6 ---
         Debug.Log("GPSController --- Step 6: Location service is enabled by user. Starting service.");
+        #endregion
+
         Input.location.Start();
 
         int maxWait = 20;
@@ -79,6 +92,7 @@ public class GPSController : MonoBehaviour
             maxWait--;
         }
 
+        #region debug
         if (maxWait <= 0 || Input.location.status == LocationServiceStatus.Failed)
         {
             Debug.LogError("GPSController --- FAILED: Unable to determine device location or timed out.");
@@ -87,6 +101,8 @@ public class GPSController : MonoBehaviour
         }
 
         Debug.Log("GPSController --- Step 7: GPS Initialized successfully! Starting updates.");
+        #endregion
+
         InvokeRepeating("UpdateGpsData", 0.5f, 1f);
     }
 
