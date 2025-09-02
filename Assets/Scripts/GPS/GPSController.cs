@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.UI;
 using TMPro;
-using System; // <-- ADDED: We need this for the System.Math library
+using System;
 
 [System.Serializable]
 public class Landmark
 {
     public string name;
-    public double latitude; // Changed to double
-    public double longitude; // Changed to double
+    public double latitude;
+    public double longitude;
     public bool isFound = false;
 }
 
@@ -17,47 +18,76 @@ public class GPSController : MonoBehaviour
 {
     [Header("Landmark Settings")]
     public Landmark[] landmarks;
-    public double triggerDistance = 15.0; // <-- CHANGED to double
+    public double triggerDistance = 15.0;
 
     [Header("UI for Debugging")]
     public TextMeshProUGUI debugText;
 
-    // --- Private variables ---
     private int currentLandmarkIndex = 0;
-    private double distanceToTarget; // <-- CHANGED to double
+    private double distanceToTarget;
 
-    // Singleton instance
     public static GPSController instance;
 
     private void Awake()
     {
+        Debug.Log("GPSController --- Step 1: Awake() method called.");
+
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
+
+        if (debugText != null) debugText.text = "GPS Controller starting...";
     }
 
     IEnumerator Start()
     {
-        // GPS Initialization (this part remains the same)
+        Debug.Log("GPSController --- Step 2: Start() coroutine initiated.");
+
+        yield return new WaitForSeconds(1);
+
+        Debug.Log("GPSController --- Step 3: Checking for location permission.");
+        if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
+        {
+            Debug.Log("GPSController --- Step 4: Permission not found. Requesting it now.");
+            debugText.text = "Requesting location permission...";
+            Permission.RequestUserPermission(Permission.FineLocation);
+
+            float timer = 0;
+            while (!Permission.HasUserAuthorizedPermission(Permission.FineLocation) && timer < 20f)
+            {
+                yield return new WaitForSeconds(1);
+                timer++;
+            }
+        }
+
+        Debug.Log("GPSController --- Step 5: Finished permission check. Now checking if service is enabled.");
+
         if (!Input.location.isEnabledByUser)
         {
-            debugText.text = "Location services are not enabled.";
+            Debug.LogError("GPSController --- FAILED: User has not enabled GPS in phone settings.");
+            debugText.text = "Please enable Location Services in your device settings.";
             yield break;
         }
+
+        // --- DEBUG CHECKPOINT 6 ---
+        Debug.Log("GPSController --- Step 6: Location service is enabled by user. Starting service.");
         Input.location.Start();
+
         int maxWait = 20;
         while (Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
         {
             yield return new WaitForSeconds(1);
             maxWait--;
         }
+
         if (maxWait <= 0 || Input.location.status == LocationServiceStatus.Failed)
         {
+            Debug.LogError("GPSController --- FAILED: Unable to determine device location or timed out.");
             debugText.text = "Unable to determine device location.";
             yield break;
         }
 
-        // If GPS is ready, start updating
-        InvokeRepeating(nameof(UpdateGpsData), 0.5f, 1f);
+        Debug.Log("GPSController --- Step 7: GPS Initialized successfully! Starting updates.");
+        InvokeRepeating("UpdateGpsData", 0.5f, 1f);
     }
 
     void UpdateGpsData()
@@ -73,15 +103,13 @@ public class GPSController : MonoBehaviour
 
         Landmark currentTarget = landmarks[currentLandmarkIndex];
 
-        // Unity's API gives us floats, but they are implicitly and safely converted to doubles here.
-        double currentLatitude = Input.location.lastData.latitude; // <-- CHANGED to double
-        double currentLongitude = Input.location.lastData.longitude; // <-- CHANGED to double
+        double currentLatitude = Input.location.lastData.latitude;
+        double currentLongitude = Input.location.lastData.longitude;
 
         distanceToTarget = CalculateDistance(currentLatitude, currentLongitude, currentTarget.latitude, currentTarget.longitude);
 
         if (debugText != null)
         {
-            // Use F6 for more precision in the debug output if you want
             debugText.text = $"Go find: {currentTarget.name}\n" +
                              $"Lat: {currentLatitude:F6}\n" +
                              $"Lon: {currentLongitude:F6}\n" +
@@ -101,8 +129,6 @@ public class GPSController : MonoBehaviour
     {
         debugText.text += $"\n--- FOUND {landmarks[landmarkIndex].name}! ---";
 
-        // Use a switch statement to handle different challenges
-        // This is where an enum can make the code even cleaner!
         switch (landmarkIndex)
         {
             case 0:
@@ -123,21 +149,20 @@ public class GPSController : MonoBehaviour
         }
     }
 
-    // --- Haversine formula using System.Math for double precision ---
-    private double CalculateDistance(double lat1, double lon1, double lat2, double lon2) // <-- CHANGED
+    private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
-        var R = 6371e3; // metres
-        var φ1 = lat1 * Math.PI / 180.0; // <-- CHANGED
-        var φ2 = lat2 * Math.PI / 180.0; // <-- CHANGED
-        var Δφ = (lat2 - lat1) * Math.PI / 180.0; // <-- CHANGED
-        var Δλ = (lon2 - lon1) * Math.PI / 180.0; // <-- CHANGED
+        var R = 6371e3;
+        var φ1 = lat1 * Math.PI / 180.0;
+        var φ2 = lat2 * Math.PI / 180.0;
+        var Δφ = (lat2 - lat1) * Math.PI / 180.0;
+        var Δλ = (lon2 - lon1) * Math.PI / 180.0;
 
         var a = Math.Sin(Δφ / 2) * Math.Sin(Δφ / 2) +
                 Math.Cos(φ1) * Math.Cos(φ2) *
-                Math.Sin(Δλ / 2) * Math.Sin(Δλ / 2); // <-- CHANGED (Math instead of Mathf)
-        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a)); // <-- CHANGED (Math instead of Mathf)
+                Math.Sin(Δλ / 2) * Math.Sin(Δλ / 2);
+        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
         var d = R * c;
-        return d; // <-- CHANGED (returns double)
+        return d;
     }
 }
