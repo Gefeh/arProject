@@ -57,7 +57,7 @@ public class GPSController : MonoBehaviour
         }
 
         // If GPS is ready, start updating
-        InvokeRepeating("UpdateGpsData", 0.5f, 1f);
+        InvokeRepeating(nameof(UpdateGpsData), 0.5f, 1f);
     }
 
     void UpdateGpsData()
@@ -67,7 +67,7 @@ public class GPSController : MonoBehaviour
         if (currentLandmarkIndex >= landmarks.Length)
         {
             debugText.text = "Congratulations!\nYou've found all landmarks!";
-            CancelInvoke("UpdateGpsData");
+            CancelInvoke(nameof(UpdateGpsData));
             return;
         }
 

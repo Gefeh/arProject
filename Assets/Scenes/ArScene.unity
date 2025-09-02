@@ -157,16 +157,16 @@ MonoBehaviour:
     latitude: 52.36106346809735
     longitude: 4.922024909696673
     isFound: 0
-  - name: 
-    latitude: 0
-    longitude: 0
+  - name: rocks
+    latitude: 52.36056
+    longitude: 4.91667
     isFound: 0
-  - name: 
-    latitude: 0
-    longitude: 0
+  - name: dog
+    latitude: 52.36041525515544
+    longitude: 4.9194454040309425
     isFound: 0
   triggerDistance: 15
-  debugText: {fileID: 0}
+  debugText: {fileID: 815615351}
 --- !u!4 &306049385
 Transform:
   m_ObjectHideFlags: 0
