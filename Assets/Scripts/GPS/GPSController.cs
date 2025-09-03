@@ -12,6 +12,7 @@ public class Landmark
     public double latitude;
     public double longitude;
     public bool isFound = false;
+    public int id;
 }
 
 public class GPSController : MonoBehaviour
@@ -103,9 +104,12 @@ public class GPSController : MonoBehaviour
         Debug.Log("GPSController --- Step 7: GPS Initialized successfully! Starting updates.");
         #endregion
 
-        InvokeRepeating("UpdateGpsData", 0.5f, 1f);
+        InvokeRepeating(nameof(UpdateGpsData), 0.5f, 1f);
     }
 
+    /// <summary>
+    /// Updates the player's location according to the app.
+    /// </summary>
     void UpdateGpsData()
     {
         if (Input.location.status != LocationServiceStatus.Running) return;
@@ -141,6 +145,10 @@ public class GPSController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Triggers code in accordance with when the appropriate landmark is reached.
+    /// </summary>
+    /// <param name="landmarkIndex"></param>
     void TriggerLandmarkEvent(int landmarkIndex)
     {
         debugText.text += $"\n--- FOUND {landmarks[landmarkIndex].name}! ---";
@@ -165,6 +173,14 @@ public class GPSController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Calculates distance between coordinates.
+    /// </summary>
+    /// <param name="lat1"></param>
+    /// <param name="lon1"></param>
+    /// <param name="lat2"></param>
+    /// <param name="lon2"></param>
+    /// <returns></returns>
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
         var R = 6371e3;
