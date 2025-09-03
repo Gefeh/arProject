@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
-using TMPro;
-using System;
 
 [System.Serializable]
 public class Landmark
@@ -21,8 +22,14 @@ public class GPSController : MonoBehaviour
     public Landmark[] landmarks;
     public double triggerDistance = 15.0;
 
+    [Header("Challenge Order")]
+    public bool useRandomOrder = false;
+    private List<Landmark> landmarkChallengeOrder;
+    private int currentChallengeIndex = 0;
+
     [Header("UI for Debugging")]
     public TextMeshProUGUI debugText;
+
 
     private int currentLandmarkIndex = 0;
     private double distanceToTarget;
@@ -43,6 +50,7 @@ public class GPSController : MonoBehaviour
 
     IEnumerator Start()
     {
+        SetupChallengeOrder();
         #region debug
         Debug.Log("GPSController --- Step 2: Start() coroutine initiated.");
         #endregion
@@ -114,14 +122,16 @@ public class GPSController : MonoBehaviour
     {
         if (Input.location.status != LocationServiceStatus.Running) return;
 
-        if (currentLandmarkIndex >= landmarks.Length)
+        // MODIFIED: Check against the count of our quest list
+        if (currentChallengeIndex >= landmarkChallengeOrder.Count)
         {
             debugText.text = "Congratulations!\nYou've found all landmarks!";
             CancelInvoke(nameof(UpdateGpsData));
             return;
         }
 
-        Landmark currentTarget = landmarks[currentLandmarkIndex];
+        // MODIFIED: Get the target from our new quest list
+        Landmark currentTarget = landmarkChallengeOrder[currentChallengeIndex];
 
         double currentLatitude = Input.location.lastData.latitude;
         double currentLongitude = Input.location.lastData.longitude;
@@ -140,36 +150,71 @@ public class GPSController : MonoBehaviour
         {
             Debug.Log($"Found the landmark: {currentTarget.name}!");
             currentTarget.isFound = true;
-            TriggerLandmarkEvent(currentLandmarkIndex);
-            currentLandmarkIndex++;
+
+            // MODIFIED: Pass the found landmark itself to the trigger event
+            TriggerLandmarkEvent(currentTarget);
+
+            // MODIFIED: Increment the quest index
+            currentChallengeIndex++;
         }
     }
 
     /// <summary>
     /// Triggers code in accordance with when the appropriate landmark is reached.
     /// </summary>
-    /// <param name="landmarkIndex"></param>
-    void TriggerLandmarkEvent(int landmarkIndex)
+    /// <param name="foundLandmark">The Landmark object that was just found.</param>
+    void TriggerLandmarkEvent(Landmark foundLandmark) // MODIFIED: The parameter is now a Landmark
     {
-        debugText.text += $"\n--- FOUND {landmarks[landmarkIndex].name}! ---";
+        debugText.text += $"\n--- FOUND {foundLandmark.name}! ---";
 
-        switch (landmarkIndex)
+        // Now, we use the landmark's ID for the switch statement.
+        // This is more robust than relying on the array index.
+        switch (foundLandmark.id)
         {
             case 0:
-                Debug.Log("Starting challenge for the first landmark!");
-                // Example: ARChallengeManager.instance.StartChallengeOne();
+                Debug.Log("Starting challenge for landmark with ID 0!");
                 break;
             case 1:
-                Debug.Log("Starting challenge for the second landmark!");
-                // Example: ARChallengeManager.instance.StartChallengeTwo();
+                Debug.Log("Starting challenge for landmark with ID 1!");
                 break;
             case 2:
-                Debug.Log("Starting challenge for the third landmark!");
-                // Example: ARChallengeManager.instance.StartChallengeThree();
+                Debug.Log("Starting challenge for landmark with ID 2!");
                 break;
             default:
-                Debug.Log("An unknown landmark was found.");
+                Debug.Log($"An unknown landmark with ID {foundLandmark.id} was found.");
                 break;
+        }
+    }
+
+    /// <summary>
+    /// Sets up quest order, if randomized.
+    /// </summary>
+    void SetupChallengeOrder()
+    {
+        landmarkChallengeOrder = new List<Landmark>(landmarks);
+
+        if (useRandomOrder)
+        {
+            Debug.Log("Setting up quest in RANDOM order.");
+            System.Random rng = new System.Random();
+            int n = landmarkChallengeOrder.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                Landmark value = landmarkChallengeOrder[k];
+                landmarkChallengeOrder[k] = landmarkChallengeOrder[n];
+                landmarkChallengeOrder[n] = value;
+            }
+        }
+        else
+        {
+            Debug.Log("Setting up quest in Inspector array order.");
+        }
+
+        foreach (var landmark in landmarkChallengeOrder)
+        {
+            landmark.isFound = false;
         }
     }
 

@@ -203,6 +203,7 @@ MonoBehaviour:
     isFound: 0
     id: 3
   triggerDistance: 15
+  useRandomOrder: 1
   debugText: {fileID: 815615351}
 --- !u!4 &306049385
 Transform:
