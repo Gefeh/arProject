@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
+using TMPro;
 
 [System.Serializable]
 public class Landmark
@@ -28,7 +29,7 @@ public class GPSController : MonoBehaviour
     private int currentChallengeIndex = 0;
 
     [Header("UI for Debugging")]
-    public Label debugText;
+    public TextMeshProUGUI debugText;
 
 
     private int currentLandmarkIndex = 0;
