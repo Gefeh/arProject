@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using UnityEngine.UIElements;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
@@ -28,7 +28,7 @@ public class GPSController : MonoBehaviour
     private int currentChallengeIndex = 0;
 
     [Header("UI for Debugging")]
-    public TextMeshProUGUI debugText;
+    public Label debugText;
 
 
     private int currentLandmarkIndex = 0;
