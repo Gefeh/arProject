@@ -13,9 +13,6 @@ public class ChainController : MonoBehaviour
     private float _opacity = 0.75f;
     private ParticleSystem _particles;
     private Material _transparentMaterialCopy;
-    
-    private readonly int _smoothnessID = Shader.PropertyToID("_Smoothness");
-    private readonly int _metallicID = Shader.PropertyToID("_Metallic");
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -34,10 +31,6 @@ public class ChainController : MonoBehaviour
             var color = _transparentMaterialCopy.color;
             color.a = _opacity;
             _transparentMaterialCopy.color = color;
-            
-            // get rid of the weird reflections
-            //transparentMaterial.SetFloat(_metallicID, _opacity / 2); 
-            //transparentMaterial.SetFloat(_smoothnessID, _opacity / 2);
 
             if (_opacity <= 0) Destroy(gameObject);
         }
