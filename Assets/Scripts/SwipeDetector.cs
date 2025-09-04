@@ -7,7 +7,7 @@ public class SwipeDetection : MonoBehaviour
     //public event Swipe swipePerformed;
     [SerializeField] private InputAction position, press;
     [SerializeField] private Camera _arCamera;
-    [SerializeField] private float swipeResistance = 100;
+    [SerializeField] private float swipeResistance = 10;
     public GameObject trailObject;
     private TrailRenderer trailRenderer;
     private ParticleSystem particles;
@@ -54,10 +54,11 @@ public class SwipeDetection : MonoBehaviour
                         // We hit something! Get the GameObject that was hit and toggle its lock state
                         // hit.collider.gameObject gives us the GameObject that owns the collider we hit
                         ChainController chainController = hit.transform.gameObject.GetComponentInParent<ChainController>();
+                        if (chainController == null) return;
                         if (chainController.IsBroken()) return;
                         hit.transform.gameObject.SetActive(false);
                         chainController.Break();
-                        particles.Emit(1);
+                        //particles.Emit(1);
                 
                         // STUDENT TIP: You could add more logic here:
                         // - Check if the hit object is actually an AR object
@@ -66,7 +67,7 @@ public class SwipeDetection : MonoBehaviour
                         // - Handle different types of objects differently
                 
                         // DEBUGGING TIP: Uncomment the line below to see what you're hitting in the Console
-                        // Debug.Log($"Hit object: {hit.collider.gameObject.name}");
+                        Debug.Log($"Hit object: {hit.collider.gameObject.name}");
                     }
                 }
             }

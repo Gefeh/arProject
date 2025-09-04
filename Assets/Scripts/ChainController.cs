@@ -1,49 +1,68 @@
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ChainController : MonoBehaviour
 {
-    private bool broken;
-    private float opacity = 0.75f;
-    
-    private List<MeshRenderer> childRenderers;
     public Material transparentMaterial;
-    private Material transparentMaterialCopy;
+    private bool _broken;
+
+    private List<MeshRenderer> _childRenderers;
+
+    public Action OnBroken = () => { };
+    private float _opacity = 0.75f;
+    private ParticleSystem _particles;
+    private Material _transparentMaterialCopy;
     
+    private readonly int _smoothnessID = Shader.PropertyToID("_Smoothness");
+    private readonly int _metallicID = Shader.PropertyToID("_Metallic");
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        childRenderers = new List<MeshRenderer>(GetComponentsInChildren<MeshRenderer>());
-        transparentMaterialCopy = new Material(transparentMaterial);
+        _childRenderers = new List<MeshRenderer>(GetComponentsInChildren<MeshRenderer>());
+        _transparentMaterialCopy = new Material(transparentMaterial);
+        _particles = GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (broken)
+        if (_broken)
         {
-            opacity -= Time.deltaTime * 0.6f;
-                Color color = transparentMaterialCopy.color;
-                color.a = opacity;
-                transparentMaterialCopy.color = color;
+            _opacity -= Time.deltaTime * 0.5f;
+            var color = _transparentMaterialCopy.color;
+            color.a = _opacity;
+            _transparentMaterialCopy.color = color;
+            
+            // get rid of the weird reflections
+            //transparentMaterial.SetFloat(_metallicID, _opacity / 2); 
+            //transparentMaterial.SetFloat(_smoothnessID, _opacity / 2);
 
-            if (opacity <= 0)
-            {
-                Destroy(gameObject);
-            }
+            if (_opacity <= 0) Destroy(gameObject);
         }
     }
 
     public void Break()
     {
-        broken = true;
-        childRenderers.RemoveAll(x => !x.enabled);
-        childRenderers.ForEach(x => x.material = transparentMaterialCopy);
+        _broken = true;
+        _childRenderers.ForEach(x =>
+        {
+            if (x.gameObject.activeInHierarchy)
+            {
+                x.material = _transparentMaterialCopy;
+            }
+            else
+            {
+                _particles.transform.position = x.gameObject.transform.position;
+                _particles.Play();
+            }
+        });
+        OnBroken();
     }
 
     public bool IsBroken()
     {
-        return broken;
+        return _broken;
     }
 }
