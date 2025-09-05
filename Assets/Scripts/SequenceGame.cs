@@ -4,17 +4,13 @@ using TMPro;
 public class SequenceGame : MonoBehaviour
 {
     [Header("Assign your 4 objects in order")]
-    public GameObject[] objects;  
+    public GameObject[] objects;
 
-    [Header("Assign a UI Text here")]
-    public TextMeshProUGUI winText;  
+    private int currentIndex = 0;
 
-    private int currentIndex = 0; 
-
-    void Start()
+    private void OnEnable()
     {
-        if (winText != null)
-            winText.gameObject.SetActive(false);
+        Debug.Log("Enable seqeunce");
     }
 
     public void ObjectClicked(GameObject clickedObject)
@@ -61,7 +57,6 @@ public class SequenceGame : MonoBehaviour
         foreach (GameObject obj in objects)
             obj.SetActive(false);
 
-        if (winText != null)
-            winText.gameObject.SetActive(true);
+        GameManager.Instance.ChallengeManager.WinChallenge(this.gameObject);
     }
 }

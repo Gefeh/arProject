@@ -9,17 +9,13 @@ public class ChainArea : MonoBehaviour
     private int chainsBroken;
     private Bounds area;
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        var boxCollider = GetComponent<BoxCollider>();
-        area = new Bounds(boxCollider.center, boxCollider.size);
-        CreateChains();
-    }
 
     private void OnEnable()
     {
-        
+        Debug.Log("Enable chains");
+        var boxCollider = GetComponent<BoxCollider>();
+        area = new Bounds(boxCollider.center, boxCollider.size);
+        CreateChains();
     }
 
     private void OnChainBroken()
@@ -28,6 +24,7 @@ public class ChainArea : MonoBehaviour
         if (chainsBroken == _chains.Count)
         {
             Debug.Log("Broke everything!!!");
+            GameManager.Instance.ChallengeManager.WinChallenge(this.gameObject);
         }
     }
 

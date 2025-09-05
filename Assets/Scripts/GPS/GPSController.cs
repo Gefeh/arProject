@@ -11,6 +11,7 @@ public enum GameState
 {
     BeforeStart,
     HuntingLandmarks,
+    InChallenge,
     QuestComplete
 }
 
@@ -21,6 +22,7 @@ public class Landmark
     public double latitude;
     public double longitude;
     public bool isFound = false;
+    public GameObject challenge;
     public int id;
 }
 
@@ -34,7 +36,7 @@ public class GPSController : MonoBehaviour
     [Header("Challenge Order")]
     public bool useRandomOrder = false;
     private List<Landmark> landmarkChallengeOrder;
-    private int currentChallengeIndex = 0;
+    public int currentChallengeIndex = 0;
 
     [Header("Gamestate")]
     private GameState currentGameState = GameState.BeforeStart;
@@ -207,35 +209,32 @@ public class GPSController : MonoBehaviour
         {
             Debug.Log($"Found the landmark: {currentTarget.name}!");
             currentTarget.isFound = true;
+            currentGameState = GameState.InChallenge;
             TriggerLandmarkEvent(currentTarget);
-            currentChallengeIndex++;
         }
+    }
+
+    public void ResumeLandmarkHunt()
+    {
+        currentGameState = GameState.HuntingLandmarks;
     }
 
     /// <summary>
     /// Triggers code in accordance with when the appropriate landmark is reached.
     /// </summary>
     /// <param name="foundLandmark">The Landmark object that was just found.</param>
-    void TriggerLandmarkEvent(Landmark foundLandmark) // MODIFIED: The parameter is now a Landmark
+    void TriggerLandmarkEvent(Landmark foundLandmark)
     {
         GameManager.Instance.GameUI.AppendText($"\n--- FOUND {foundLandmark.name}! ---");
-
-        // Now, we use the landmark's ID for the switch statement.
-        // This is more robust than relying on the array index.
-        switch (foundLandmark.id)
+        if (foundLandmark.challenge != null)
         {
-            case 0:
-                Debug.Log("Starting challenge for landmark with ID 0!");
-                break;
-            case 1:
-                Debug.Log("Starting challenge for landmark with ID 1!");
-                break;
-            case 2:
-                Debug.Log("Starting challenge for landmark with ID 2!");
-                break;
-            default:
-                Debug.Log($"An unknown landmark with ID {foundLandmark.id} was found.");
-                break;
+            Debug.Log("kill yourself");
+            GameManager.Instance.ChallengeManager.StartChallenge(foundLandmark.challenge);
+        }
+        else
+        {
+            Debug.Log("kill yourself frfr");
+            GameManager.Instance.ChallengeManager.WinChallenge(foundLandmark.challenge);
         }
     }
 

@@ -5,12 +5,18 @@ public class ChallengeManager : MonoBehaviour
 {
     public void StartChallenge(GameObject challengeOrigin)
     {
+        Debug.Log("Start");
         challengeOrigin.SetActive(true);
     }
 
     public void WinChallenge(GameObject challengeOrigin)
     {
-        challengeOrigin.SetActive(false);
+        if (challengeOrigin != null)
+        {
+            challengeOrigin.SetActive(false);
+        }
         GameManager.Instance.CurrentChallengeCount++;
+        GameManager.Instance.GPSController.currentChallengeIndex++;
+        GameManager.Instance.GPSController.ResumeLandmarkHunt();
     }
 }

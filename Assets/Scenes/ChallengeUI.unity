@@ -466,6 +466,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1010370700 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7001377359309362935, guid: b98dc232695685f468d61c38806bbead, type: 3}
+  m_PrefabInstance: {fileID: 2095148161}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1039918145
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,6 +985,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f73ac73d8398549aa6aa5275a65285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1780538568 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4601678430641245777, guid: 7874633d0cf75e04a834d365461edd73, type: 3}
+  m_PrefabInstance: {fileID: 747375837}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1809757835
 GameObject:
   m_ObjectHideFlags: 0
@@ -1277,6 +1287,10 @@ PrefabInstance:
       propertyPath: _gameUI
       value: 
       objectReference: {fileID: 707433343}
+    - target: {fileID: 1042645773780337681, guid: 42fdc8ae5706f7b419792446118311f1, type: 3}
+      propertyPath: _challengeManager
+      value: 
+      objectReference: {fileID: 2111330178}
     - target: {fileID: 1703425893273207787, guid: 42fdc8ae5706f7b419792446118311f1, type: 3}
       propertyPath: m_Name
       value: Managers
@@ -1321,6 +1335,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3035730765628262986, guid: 42fdc8ae5706f7b419792446118311f1, type: 3}
+      propertyPath: landmarks.Array.data[0].challenge
+      value: 
+      objectReference: {fileID: 1010370700}
+    - target: {fileID: 3035730765628262986, guid: 42fdc8ae5706f7b419792446118311f1, type: 3}
+      propertyPath: landmarks.Array.data[1].challenge
+      value: 
+      objectReference: {fileID: 1780538568}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
