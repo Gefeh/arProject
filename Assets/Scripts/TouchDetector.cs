@@ -102,7 +102,6 @@ public class TouchColliderDetector : MonoBehaviour
             {
                 // We hit something! Get the GameObject that was hit and toggle its lock state
                 // hit.collider.gameObject gives us the GameObject that owns the collider we hit
-                _imageTracker.ToggleLockState(hit.collider.gameObject);
                 
                 // STUDENT TIP: You could add more logic here:
                 // - Check if the hit object is actually an AR object
@@ -111,7 +110,7 @@ public class TouchColliderDetector : MonoBehaviour
                 // - Handle different types of objects differently
                 
                 // DEBUGGING TIP: Uncomment the line below to see what you're hitting in the Console
-                // Debug.Log($"Hit object: {hit.collider.gameObject.name}");
+                Debug.Log($"Hit object: {hit.collider.gameObject.name}");
             }
         }
     }

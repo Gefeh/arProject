@@ -67,7 +67,7 @@ public class SwipeDetection : MonoBehaviour
                         // - Handle different types of objects differently
                 
                         // DEBUGGING TIP: Uncomment the line below to see what you're hitting in the Console
-                        Debug.Log($"Hit object: {hit.collider.gameObject.name}");
+                        // Debug.Log($"Hit object: {hit.collider.gameObject.name}");
                     }
                 }
             }
