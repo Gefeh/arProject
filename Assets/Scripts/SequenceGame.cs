@@ -27,6 +27,7 @@ public class SequenceGame : MonoBehaviour
         if (clickedObject == objects[currentIndex])
         {
             currentIndex++;
+            Debug.Log("correct");
 
             // Check for win
             if (currentIndex >= objects.Length)
