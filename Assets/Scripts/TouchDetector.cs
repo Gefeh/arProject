@@ -31,20 +31,20 @@ using UnityEngine.InputSystem;
 public class TouchColliderDetector : MonoBehaviour
 {
     // ===== INSPECTOR FIELDS (Drag and drop these in the Unity Inspector) =====
-    
+
     /// <summary>
     /// The AR Camera used to convert screen touches to 3D rays
     /// STUDENT NOTE: This should be the same camera used for AR rendering
     /// </summary>
     [SerializeField] private Camera _arCamera;
-    
+
     /// <summary>
     /// Input Action that defines what input triggers the tap detection
     /// STUDENT NOTE: Create this in the Input Action Asset (usually mapped to touch or mouse click)
     /// Set it to "Button" type with "Press" interaction for best results
     /// </summary>
     [SerializeField] private InputAction _tapAction;
-    
+
     /// <summary>
     /// Reference to the ImageTracker script that handles lock/unlock functionality
     /// STUDENT NOTE: This should be the same ImageTracker that manages your AR objects
@@ -56,6 +56,9 @@ public class TouchColliderDetector : MonoBehaviour
     /// This is where we activate the input action to start listening for touches
     /// STUDENT NOTE: Always enable Input Actions in OnEnable, not Start!
     /// </summary>
+    /// 
+    [SerializeField] private AudioSource audioSource;
+    
     private void OnEnable()
     {
         // Enable the tap action so it starts detecting input
@@ -100,19 +103,33 @@ public class TouchColliderDetector : MonoBehaviour
             // Physics.Raycast returns true if something was hit, and fills the 'hit' variable with details
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
+
+                if (hit.collider.CompareTag("Dog"))
+                {
+                    Bark();
+                }
                 // We hit something! Get the GameObject that was hit and toggle its lock state
                 // hit.collider.gameObject gives us the GameObject that owns the collider we hit
-                _imageTracker.ToggleLockState(hit.collider.gameObject);
-                
+                //_imageTracker.ToggleLockState(hit.collider.gameObject);
+
                 // STUDENT TIP: You could add more logic here:
                 // - Check if the hit object is actually an AR object
                 // - Add visual feedback (highlight, particles, etc.)
                 // - Play sound effects
                 // - Handle different types of objects differently
-                
+
                 // DEBUGGING TIP: Uncomment the line below to see what you're hitting in the Console
                 // Debug.Log($"Hit object: {hit.collider.gameObject.name}");
             }
+        }
+    }
+    
+    void Bark()
+    {
+        if (audioSource != null)
+        {
+            audioSource.Play();
+            Debug.Log("Albert barked!");
         }
     }
 }
