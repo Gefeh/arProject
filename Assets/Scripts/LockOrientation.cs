@@ -28,7 +28,7 @@ public class LockOrientation : MonoBehaviour
     {
         // Force the screen to landscape left orientation
         // This is ideal for AR marker tracking as it provides a wide horizontal view
-        Screen.orientation = ScreenOrientation.Portrait;
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
 
         // Disable automatic rotation to portrait modes
         // Portrait modes can make AR tracking less stable and reduce the visible area
