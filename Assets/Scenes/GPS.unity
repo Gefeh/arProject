@@ -163,7 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9185bf76b1181c742840b44b9b607650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameUI: {fileID: 707433341}
+  _gameUI: {fileID: 707433343}
+  _mmui: {fileID: 638293754}
   _gpsController: {fileID: 306049384}
 --- !u!1 &245243465
 GameObject:
@@ -228,6 +229,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7288d8ba0e6c77e47994c7e2a104f279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startZone:
+    name: Park Entrance
+    latitude: 52.35948806470812
+    longitude: 4.91695189096612
+    isFound: 0
+    id: -1
   landmarks:
   - name: Nationaal Slavernijmonument
     latitude: 52.3587126327426
@@ -251,7 +258,6 @@ MonoBehaviour:
     id: 3
   triggerDistance: 15
   useRandomOrder: 1
-  debugText: {fileID: 0}
 --- !u!4 &306049385
 Transform:
   m_ObjectHideFlags: 0
@@ -388,6 +394,70 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &638293751
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 638293752}
+  - component: {fileID: 638293753}
+  - component: {fileID: 638293754}
+  m_Layer: 0
+  m_Name: MMUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &638293752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638293751}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1052537377}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &638293753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638293751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: a84530b63902d254eae1bfba6b5e3ee1, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 131e7d56001609b4a84ee232ea40325f, type: 3}
+  m_SortingOrder: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+--- !u!114 &638293754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638293751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59108a16068bb4e4a8f8e499e8941082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &707433340
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,6 +468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 707433342}
   - component: {fileID: 707433341}
+  - component: {fileID: 707433343}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -439,6 +510,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1052537377}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &707433343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707433340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aeabe8427d8e8740a170d7ef587dc1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &753848811
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,6 +737,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 707433342}
+  - {fileID: 638293752}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1284094830
@@ -1136,7 +1220,7 @@ Transform:
   m_GameObject: {fileID: 1809757835}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.35, y: 1, z: 2.64}
+  m_LocalPosition: {x: 0.212, y: 0.534, z: 2.5}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []

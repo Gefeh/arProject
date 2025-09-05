@@ -7,14 +7,16 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
 
-    [SerializeField] private UIDocument _gameUI;
+    [SerializeField] private GameUI _gameUI;
+    [SerializeField] private MMUI _mmui;
 
     [Header("GPS")]
 
     [SerializeField] private GPSController _gpsController;
 
-    public UIDocument GameUI { get { return _gameUI; } private set { _gameUI = value; } }
+    public GameUI GameUI { get { return _gameUI; } private set { _gameUI = value; } }
     public GPSController GPSController { get { return _gpsController; } private set { _gpsController = value; } }
+    public MMUI MMUI { get { return _mmui; } private set { _mmui = value; } }
 
     private void Awake()
     {

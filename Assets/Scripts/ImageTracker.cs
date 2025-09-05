@@ -202,7 +202,7 @@ public class ImageTracker : MonoBehaviour
         else
         {
             // Object is unlocked, so lock it (make it independent of marker)
-            LockObject(arObject);
+            //LockObject(arObject);
         }
     }
 
@@ -217,7 +217,7 @@ public class ImageTracker : MonoBehaviour
     /// STUDENT NOTE: Locked objects will stay visible even when the marker disappears!
     /// This is useful for creating persistent AR content that users can examine
     /// </summary>
-    private void LockObject(GameObject arObject)
+    /*private void LockObject(GameObject arObject)
     {
         // Mark this object as locked in our tracking dictionary
         lockedObjects[arObject] = true;
@@ -245,7 +245,7 @@ public class ImageTracker : MonoBehaviour
         }
 
         Debug.Log($"Locked object: {arObject.name} - now child of camera");
-    }
+    }*/
 
     /// <summary>
     /// Unlocks an AR object, returning it to marker tracking
