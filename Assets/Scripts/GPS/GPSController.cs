@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using UnityEngine.UIElements;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
+using TMPro;
+
+public enum GameState
+{
+    BeforeStart,
+    HuntingLandmarks,
+    QuestComplete
+}
 
 [System.Serializable]
 public class Landmark
@@ -19,6 +27,7 @@ public class Landmark
 public class GPSController : MonoBehaviour
 {
     [Header("Landmark Settings")]
+    public Landmark startZone;
     public Landmark[] landmarks;
     public double triggerDistance = 15.0;
 
@@ -27,9 +36,8 @@ public class GPSController : MonoBehaviour
     private List<Landmark> landmarkChallengeOrder;
     private int currentChallengeIndex = 0;
 
-    [Header("UI for Debugging")]
-    public TextMeshProUGUI debugText;
-
+    [Header("Gamestate")]
+    private GameState currentGameState = GameState.BeforeStart;
 
     private int currentLandmarkIndex = 0;
     private double distanceToTarget;
@@ -45,7 +53,7 @@ public class GPSController : MonoBehaviour
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
 
-        if (debugText != null) debugText.text = "GPS Controller starting...";
+        if (GameManager.Instance.MMUI.MarkText != null) GameManager.Instance.MMUI.UpdateText("GPS Controller starting...");
     }
 
     IEnumerator Start()
@@ -68,7 +76,7 @@ public class GPSController : MonoBehaviour
             Debug.Log("GPSController --- Step 4: Permission not found. Requesting it now.");
             #endregion
 
-            debugText.text = "Requesting location permission...";
+            GameManager.Instance.MMUI.UpdateText("Requesting location permission...");
             Permission.RequestUserPermission(Permission.FineLocation);
 
             float timer = 0;
@@ -85,7 +93,7 @@ public class GPSController : MonoBehaviour
         if (!Input.location.isEnabledByUser)
         {
             Debug.LogError("GPSController --- FAILED: User has not enabled GPS in phone settings.");
-            debugText.text = "Please enable Location Services in your device settings.";
+            GameManager.Instance.GameUI.UpdateText("Please enable Location Services in your device settings.");
             yield break;
         }
 
@@ -105,7 +113,7 @@ public class GPSController : MonoBehaviour
         if (maxWait <= 0 || Input.location.status == LocationServiceStatus.Failed)
         {
             Debug.LogError("GPSController --- FAILED: Unable to determine device location or timed out.");
-            debugText.text = "Unable to determine device location.";
+            GameManager.Instance.GameUI.UpdateText("Unable to determine device location.");
             yield break;
         }
 
@@ -115,6 +123,17 @@ public class GPSController : MonoBehaviour
         InvokeRepeating(nameof(UpdateGpsData), 0.5f, 1f);
     }
 
+    public void StartLandmarkHunt()
+    {
+        if (currentGameState == GameState.BeforeStart)
+        {
+            Debug.Log("Landmark hunt has started!");
+            SetupChallengeOrder();
+            GameManager.Instance.GameUI.EnableUI();
+            currentGameState = GameState.HuntingLandmarks;
+        }
+    }
+
     /// <summary>
     /// Updates the player's location according to the app.
     /// </summary>
@@ -122,15 +141,53 @@ public class GPSController : MonoBehaviour
     {
         if (Input.location.status != LocationServiceStatus.Running) return;
 
-        // MODIFIED: Check against the count of our quest list
+        switch (currentGameState)
+        {
+            case GameState.BeforeStart:
+                CheckStartZone();
+                break;
+            case GameState.HuntingLandmarks:
+                CheckLandmarkProgress();
+                break;
+            case GameState.QuestComplete:
+                
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Checks if the player is in the startzone
+    /// </summary>
+    private void CheckStartZone()
+    {
+        double currentLatitude = Input.location.lastData.latitude;
+        double currentLongitude = Input.location.lastData.longitude;
+        double distanceToStart = CalculateDistance(currentLatitude, currentLongitude, startZone.latitude, startZone.longitude);
+
+        if (distanceToStart <= triggerDistance)
+        {
+            GameManager.Instance.MMUI.SetStartButtonEnabled(true);
+            GameManager.Instance.MMUI.UpdateText("You are in the starting area. Press Start to begin!");
+        }
+        else
+        {
+            GameManager.Instance.MMUI.SetStartButtonEnabled(false);
+            GameManager.Instance.MMUI.UpdateText($"Please go to the {startZone.name} to begin your quest. ({distanceToStart:F0}m away)");
+        }
+    }
+
+    /// <summary>
+    /// Checsk the player's position compared to the currently assigned landmark
+    /// </summary>
+    void CheckLandmarkProgress()
+    {
         if (currentChallengeIndex >= landmarkChallengeOrder.Count)
         {
-            debugText.text = "Congratulations!\nYou've found all landmarks!";
+            GameManager.Instance.GameUI.UpdateText("Congratulations!\nYou've found all landmarks!");
             CancelInvoke(nameof(UpdateGpsData));
             return;
         }
 
-        // MODIFIED: Get the target from our new quest list
         Landmark currentTarget = landmarkChallengeOrder[currentChallengeIndex];
 
         double currentLatitude = Input.location.lastData.latitude;
@@ -138,23 +195,19 @@ public class GPSController : MonoBehaviour
 
         distanceToTarget = CalculateDistance(currentLatitude, currentLongitude, currentTarget.latitude, currentTarget.longitude);
 
-        if (debugText != null)
+        if (GameManager.Instance.GameUI.BottomText != null)
         {
-            debugText.text = $"Go find: {currentTarget.name}\n" +
+            GameManager.Instance.GameUI.UpdateText($"Go find: {currentTarget.name}\n" +
                              $"Lat: {currentLatitude:F6}\n" +
                              $"Lon: {currentLongitude:F6}\n" +
-                             $"Dist to Target: {distanceToTarget:F1} meters";
+                             $"Dist to Target: {distanceToTarget:F1} meters");
         }
 
         if (distanceToTarget <= triggerDistance && !currentTarget.isFound)
         {
             Debug.Log($"Found the landmark: {currentTarget.name}!");
             currentTarget.isFound = true;
-
-            // MODIFIED: Pass the found landmark itself to the trigger event
             TriggerLandmarkEvent(currentTarget);
-
-            // MODIFIED: Increment the quest index
             currentChallengeIndex++;
         }
     }
@@ -165,7 +218,7 @@ public class GPSController : MonoBehaviour
     /// <param name="foundLandmark">The Landmark object that was just found.</param>
     void TriggerLandmarkEvent(Landmark foundLandmark) // MODIFIED: The parameter is now a Landmark
     {
-        debugText.text += $"\n--- FOUND {foundLandmark.name}! ---";
+        GameManager.Instance.GameUI.AppendText($"\n--- FOUND {foundLandmark.name}! ---");
 
         // Now, we use the landmark's ID for the switch statement.
         // This is more robust than relying on the array index.

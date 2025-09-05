@@ -1,0 +1,5 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; -unity-font-definition: url(&quot;project://database/Assets/UI/ByteBounce.ttf?fileID=12800000&amp;guid=b7233e2660fd6af46aae6fb810ffec87&amp;type=3#ByteBounce&quot;);">
+        <ui:Label text="Loading..." name="QuestLog" style="top: 85%; align-self: center; width: 66%; height: 10%; -unity-text-align: upper-center; -unity-font-definition: url(&quot;project://database/Assets/UI/ByteBounce.ttf?fileID=12800000&amp;guid=b7233e2660fd6af46aae6fb810ffec87&amp;type=3#ByteBounce&quot;); white-space: normal; color: rgb(255, 255, 0);" />
+    </ui:VisualElement>
+</ui:UXML>
