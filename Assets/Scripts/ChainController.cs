@@ -13,6 +13,7 @@ public class ChainController : MonoBehaviour
     private float _opacity = 0.75f;
     private ParticleSystem _particles;
     private Material _transparentMaterialCopy;
+    private AudioSource _audioSource;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -20,6 +21,7 @@ public class ChainController : MonoBehaviour
         _childRenderers = new List<MeshRenderer>(GetComponentsInChildren<MeshRenderer>());
         _transparentMaterialCopy = new Material(transparentMaterial);
         _particles = GetComponent<ParticleSystem>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -51,6 +53,7 @@ public class ChainController : MonoBehaviour
                 _particles.Play();
             }
         });
+        _audioSource.Play();
         OnBroken();
     }
 
