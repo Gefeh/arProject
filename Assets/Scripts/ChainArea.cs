@@ -82,4 +82,9 @@ public class ChainArea : MonoBehaviour
             }
         }
     }
+
+    public Bounds GetArea()
+    {
+        return area;
+    }
 }
