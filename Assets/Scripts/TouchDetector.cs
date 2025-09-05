@@ -58,7 +58,9 @@ public class TouchColliderDetector : MonoBehaviour
     /// </summary>
     /// 
     [SerializeField] private AudioSource audioSource;
-    
+    [SerializeField ]private Animator animator;
+    private bool isSitting = false;
+
     private void OnEnable()
     {
         // Enable the tap action so it starts detecting input
@@ -107,6 +109,20 @@ public class TouchColliderDetector : MonoBehaviour
                 if (hit.collider.CompareTag("Dog"))
                 {
                     Bark();
+
+                    if (!isSitting)
+                    {
+                        animator.SetInteger("AnimationID", 7);
+                        isSitting = true;
+                        // Debug.Log("Albert sat down");
+                    }
+                    else
+                    {
+                        animator.SetInteger("AnimationID", 0);
+                        isSitting = false;
+                        // Debug.Log("Albert stood up");
+                    }
+
                 }
                 // We hit something! Get the GameObject that was hit and toggle its lock state
                 // hit.collider.gameObject gives us the GameObject that owns the collider we hit
@@ -129,7 +145,7 @@ public class TouchColliderDetector : MonoBehaviour
         if (audioSource != null)
         {
             audioSource.Play();
-            Debug.Log("Albert barked!");
+            // Debug.Log("Albert barked!");
         }
     }
 }
