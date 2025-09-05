@@ -16,7 +16,12 @@ public class ChainArea : MonoBehaviour
         area = new Bounds(boxCollider.center, boxCollider.size);
         CreateChains();
     }
-    
+
+    private void OnEnable()
+    {
+        
+    }
+
     private void OnChainBroken()
     {
         chainsBroken++;
