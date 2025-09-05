@@ -119,39 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &245243465
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 245243466}
-  m_Layer: 0
-  m_Name: Managers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &245243466
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 245243465}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.09753466, y: -1.1201818, z: 1.2271523}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 306049385}
-  - {fileID: 753848813}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &306049383
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,24 +149,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   landmarks:
-  - name: Nationaal Slavernijmonument
+  - name: antislaverystatue
     latitude: 52.3587126327426
     longitude: 4.9178266827877755
     isFound: 0
-  - name: Muziekkoepel
+  - name: gazebo
     latitude: 52.36106346809735
     longitude: 4.922024909696673
     isFound: 0
-  - name: Rotsfontein
-    latitude: 52.36056
-    longitude: 4.91667
+  - name: 
+    latitude: 0
+    longitude: 0
     isFound: 0
-  - name: Politiehond Albert's Graf
-    latitude: 52.36041525515544
-    longitude: 4.9194454040309425
+  - name: 
+    latitude: 0
+    longitude: 0
     isFound: 0
   triggerDistance: 15
-  debugText: {fileID: 815615351}
+  debugText: {fileID: 0}
 --- !u!4 &306049385
 Transform:
   m_ObjectHideFlags: 0
@@ -208,12 +175,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 306049383}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.09753466, y: -1.1201818, z: 1.2271523}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 245243466}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
@@ -336,50 +303,6 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
---- !u!1 &753848811
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 753848813}
-  - component: {fileID: 753848812}
-  m_Layer: 0
-  m_Name: PortraitmodeForcer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &753848812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 753848811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8f73ac73d8398549aa6aa5275a65285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &753848813
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 753848811}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 606.5976, y: 439.87018, z: -1.2271523}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 245243466}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &786321589
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +370,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 350, y: 50}
+  m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &815615351
 MonoBehaviour:
@@ -1391,6 +1314,6 @@ SceneRoots:
   - {fileID: 1540774882}
   - {fileID: 1039918148}
   - {fileID: 1964602099}
+  - {fileID: 306049385}
   - {fileID: 1910171693}
   - {fileID: 1333830509}
-  - {fileID: 245243466}
