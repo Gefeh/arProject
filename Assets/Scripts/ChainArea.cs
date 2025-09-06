@@ -62,7 +62,7 @@ public class ChainArea : MonoBehaviour
     
     public void CreateChains()
     {
-        transform.GetChild(0).localScale = new Vector3(area.size.x, area.size.y, area.size.z);
+        //transform.GetChild(0).localScale = new Vector3(area.size.x, area.size.y, area.size.z);
         for (int i = 0; i < 6; i++)
         {
             if (i / 2 == 1) continue; // skip up and down

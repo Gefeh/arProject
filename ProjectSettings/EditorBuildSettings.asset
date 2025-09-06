@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/UIScene.unity
+    guid: 74c67e9b67d31db46ab89479d343acfe
+  - enabled: 0
     path: Assets/Scenes/ChallengeUI.unity
     guid: e357339b051d19e4eb5447d561179271
   - enabled: 0

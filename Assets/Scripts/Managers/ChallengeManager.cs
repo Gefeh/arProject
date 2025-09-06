@@ -6,6 +6,7 @@ public class ChallengeManager : MonoBehaviour
     public void StartChallenge(GameObject challengeOrigin)
     {
         Debug.Log("Start");
+        challengeOrigin.transform.position = Camera.main.transform.position;
         challengeOrigin.SetActive(true);
     }
 
