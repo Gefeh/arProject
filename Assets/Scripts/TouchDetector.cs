@@ -60,6 +60,8 @@ public class TouchColliderDetector : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField ]private Animator animator;
     private bool isSitting = false;
+    private float lastTapTime;
+    private float doubleTapThreshold = 0.3f;
 
     private void OnEnable()
     {
@@ -106,11 +108,30 @@ public class TouchColliderDetector : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
 
+                if (hit.collider.CompareTag("Bone"))
+                {
+                    DogGameManager.Instance.PickUpBone();
+                    DogGameManager.Instance.DespawnBone();
+                }
+
                 if (hit.collider.CompareTag("Dog"))
                 {
                     Bark();
 
-                    if (!isSitting)
+                    if (Time.time - lastTapTime <= doubleTapThreshold)
+                    {
+                        Debug.Log("Double tapped");
+                        if (DogGameManager.Instance.hasBone)
+                        {
+                            DogGameManager.Instance.GiveBone();
+                            // Bark();
+                        }
+                        lastTapTime = 0f;
+                        return;
+                    }
+                    else
+                    {
+                        if (!isSitting)
                     {
                         animator.SetInteger("AnimationID", 7);
                         isSitting = true;
@@ -120,19 +141,15 @@ public class TouchColliderDetector : MonoBehaviour
                     {
                         animator.SetInteger("AnimationID", 0);
                         isSitting = false;
-                        // Debug.Log("Albert stood up");
+                        // Debug.Log("Albert stood up");    
                     }
 
-                }
-                // We hit something! Get the GameObject that was hit and toggle its lock state
-                // hit.collider.gameObject gives us the GameObject that owns the collider we hit
-                //_imageTracker.ToggleLockState(hit.collider.gameObject);
+                    lastTapTime = Time.time;
+                    }
 
-                // STUDENT TIP: You could add more logic here:
-                // - Check if the hit object is actually an AR object
-                // - Add visual feedback (highlight, particles, etc.)
-                // - Play sound effects
-                // - Handle different types of objects differently
+                    
+
+                }
 
                 // DEBUGGING TIP: Uncomment the line below to see what you're hitting in the Console
                 // Debug.Log($"Hit object: {hit.collider.gameObject.name}");

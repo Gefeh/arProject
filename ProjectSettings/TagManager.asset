@@ -6,6 +6,7 @@ TagManager:
   tags:
   - LockIcon
   - Dog
+  - Bone
   layers:
   - Default
   - TransparentFX
