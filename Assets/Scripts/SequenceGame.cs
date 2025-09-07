@@ -40,7 +40,6 @@ public class SequenceGame : MonoBehaviour
                     ShowWinScreen();
 
                 currentIndex = 0;
-                GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Played in right order {currentIndex}/{objects.Length}");
             }
         }
         else

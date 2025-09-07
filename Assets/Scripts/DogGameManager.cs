@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DogGameManager : MonoBehaviour
@@ -49,6 +50,12 @@ public class DogGameManager : MonoBehaviour
         animator.SetInteger("AnimationID", 5);
         Debug.Log("Bone Given");
         GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Bone Found 1/1\n" + $"Bone Given 1/1");
+        StartCoroutine(Win(2));
+    }
+
+    IEnumerator Win(int time)
+    {
+        yield return new WaitForSeconds(time);
         GameManager.Instance.ChallengeManager.WinChallenge(this.gameObject);
     }
 

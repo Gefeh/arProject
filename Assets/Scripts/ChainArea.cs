@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using NUnit.Framework.Internal;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ChainArea : MonoBehaviour
@@ -27,9 +28,8 @@ public class ChainArea : MonoBehaviour
         if (chainsBroken == _chains.Count)
         {
             Debug.Log("Broke everything!!!");
-            GameManager.Instance.ChallengeManager.WinChallenge(this.gameObject);
+            StartCoroutine(Win(2));
         }
-        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, "Swipe the screen to break the chains.");
     }
 
     private static List<Vector2> CalculateChainPositions(float availableWidth, float availableHeight)
@@ -87,6 +87,12 @@ public class ChainArea : MonoBehaviour
                 instantiate.GetComponent<ChainController>().OnBroken = OnChainBroken;
             }
         }
+    }
+
+    IEnumerator Win(int time)
+    {
+        yield return new WaitForSeconds(time);
+        GameManager.Instance.ChallengeManager.WinChallenge(this.gameObject);
     }
 
     public Bounds GetArea()

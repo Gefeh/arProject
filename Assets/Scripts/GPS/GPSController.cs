@@ -192,7 +192,7 @@ public class GPSController : MonoBehaviour
         else
         {
             GameManager.Instance.MMUI.SetStartButtonEnabled(false);
-            GameManager.Instance.MMUI.UpdateText($"Please go to the {startZone.name} to begin your quest.");
+            GameManager.Instance.MMUI.UpdateText($"Please go to the {startZone.name} to begin.");
         }
     }
 
@@ -234,6 +234,7 @@ public class GPSController : MonoBehaviour
 
     public void ResumeLandmarkHunt()
     {
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, "");
         currentGameState = GameState.HuntingLandmarks;
     }
 
