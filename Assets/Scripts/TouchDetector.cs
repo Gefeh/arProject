@@ -110,8 +110,11 @@ public class TouchColliderDetector : MonoBehaviour
 
                 if (hit.collider.CompareTag("Bone"))
                 {
-                    DogGameManager.Instance.PickUpBone();
-                    DogGameManager.Instance.DespawnBone();
+                    if (!DogGameManager.Instance.hasBone)
+                    {
+                        DogGameManager.Instance.PickUpBone();
+                        DogGameManager.Instance.DespawnBone();
+                    }
                 }
 
                 if (hit.collider.CompareTag("Dog"))

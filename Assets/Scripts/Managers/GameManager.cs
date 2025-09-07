@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameUI _gameUI;
     [SerializeField] private MMUI _mmui;
+    [SerializeField] private WinUI _winui;
 
     [Header("GPS")]
 
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _currentChallengeCount;
     [SerializeField] private int _maxChallengeCount = 3;
     [SerializeField] private ChallengeManager _challengeManager;
+    [SerializeField] private DogGameManager _dogGameManager;
 
     public GameUI GameUI { get { return _gameUI; } private set { _gameUI = value; } }
     public GPSController GPSController { get { return _gpsController; } private set { _gpsController = value; } }
@@ -26,6 +28,8 @@ public class GameManager : MonoBehaviour
     public int CurrentChallengeCount { get { return _currentChallengeCount; } set { _currentChallengeCount = value; } }
     public int MaxChallengeCount { get { return _maxChallengeCount; } private set { _maxChallengeCount = value; } }
     public ChallengeManager ChallengeManager { get { return _challengeManager; } private set { _challengeManager = value; } }
+    public DogGameManager DogGameManager { get { return _dogGameManager;  } private set { _dogGameManager = value;  } }
+    public WinUI WinUI { get { return _winui; } private set { _winui = value;  } }
 
     private void Awake()
     {
@@ -38,5 +42,22 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
+    }
+
+    public void IncreaseChallengeCount()
+    {
+        CurrentChallengeCount++;
+
+        if (CurrentChallengeCount >= MaxChallengeCount)
+        {
+            WinGame();
+        }
+    }
+
+    private void WinGame()
+    {
+        _gameUI.DisableUI();
+        _winui.EnableUI();
+        GPSController.currentGameState = GameState.QuestComplete;
     }
 }

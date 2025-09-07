@@ -15,17 +15,21 @@ public class ChainArea : MonoBehaviour
         Debug.Log("Enable chains");
         var boxCollider = GetComponent<BoxCollider>();
         area = new Bounds(boxCollider.center, boxCollider.size);
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BottomText, "Swipe the screen to break the chains.");
         CreateChains();
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Chains Broken {chainsBroken}/{_chains.Count}");
     }
 
     private void OnChainBroken()
     {
         chainsBroken++;
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Chains Broken {chainsBroken}/{_chains.Count}");
         if (chainsBroken == _chains.Count)
         {
             Debug.Log("Broke everything!!!");
             GameManager.Instance.ChallengeManager.WinChallenge(this.gameObject);
         }
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, "Swipe the screen to break the chains.");
     }
 
     private static List<Vector2> CalculateChainPositions(float availableWidth, float availableHeight)

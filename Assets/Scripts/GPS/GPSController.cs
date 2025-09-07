@@ -26,10 +26,25 @@ public class Landmark
     public int id;
 }
 
+[System.Serializable]
+public struct GPSCoordinate
+{
+    public double latitude;
+    public double longitude;
+}
+
+[System.Serializable]
+public class RectZone
+{
+    public string name;
+    [Tooltip("The 4 corner points of the zone, entered in a clockwise or counter-clockwise order (e.g., SW, SE, NE, NW).")]
+    public GPSCoordinate[] corners = new GPSCoordinate[4];
+}
+
 public class GPSController : MonoBehaviour
 {
     [Header("Landmark Settings")]
-    public Landmark startZone;
+    public RectZone startZone;
     public Landmark[] landmarks;
     public double triggerDistance = 15.0;
 
@@ -39,7 +54,7 @@ public class GPSController : MonoBehaviour
     public int currentChallengeIndex = 0;
 
     [Header("Gamestate")]
-    private GameState currentGameState = GameState.BeforeStart;
+    public GameState currentGameState = GameState.BeforeStart;
 
     private int currentLandmarkIndex = 0;
     private double distanceToTarget;
@@ -95,7 +110,7 @@ public class GPSController : MonoBehaviour
         if (!Input.location.isEnabledByUser)
         {
             Debug.LogError("GPSController --- FAILED: User has not enabled GPS in phone settings.");
-            GameManager.Instance.GameUI.UpdateText("Please enable Location Services in your device settings.");
+            GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BottomText, "Please enable Location Services in your device settings.");
             yield break;
         }
 
@@ -115,7 +130,7 @@ public class GPSController : MonoBehaviour
         if (maxWait <= 0 || Input.location.status == LocationServiceStatus.Failed)
         {
             Debug.LogError("GPSController --- FAILED: Unable to determine device location or timed out.");
-            GameManager.Instance.GameUI.UpdateText("Unable to determine device location.");
+            GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BottomText, "Unable to determine device location.");
             yield break;
         }
 
@@ -162,11 +177,14 @@ public class GPSController : MonoBehaviour
     /// </summary>
     private void CheckStartZone()
     {
-        double currentLatitude = Input.location.lastData.latitude;
-        double currentLongitude = Input.location.lastData.longitude;
-        double distanceToStart = CalculateDistance(currentLatitude, currentLongitude, startZone.latitude, startZone.longitude);
+        GPSCoordinate playerPosition = new GPSCoordinate
+        {
+            latitude = Input.location.lastData.latitude,
+            longitude = Input.location.lastData.longitude
+        };
 
-        if (distanceToStart <= triggerDistance)
+        // Call our new helper function to do the complex check
+        if (IsInsideAngledRect(playerPosition, startZone))
         {
             GameManager.Instance.MMUI.SetStartButtonEnabled(true);
             GameManager.Instance.MMUI.UpdateText("You are in the starting area. Press Start to begin!");
@@ -174,7 +192,7 @@ public class GPSController : MonoBehaviour
         else
         {
             GameManager.Instance.MMUI.SetStartButtonEnabled(false);
-            GameManager.Instance.MMUI.UpdateText($"Please go to the {startZone.name} to begin your quest. ({distanceToStart:F0}m away)");
+            GameManager.Instance.MMUI.UpdateText($"Please go to the {startZone.name} to begin your quest.");
         }
     }
 
@@ -185,7 +203,7 @@ public class GPSController : MonoBehaviour
     {
         if (currentChallengeIndex >= landmarkChallengeOrder.Count)
         {
-            GameManager.Instance.GameUI.UpdateText("Congratulations!\nYou've found all landmarks!");
+            GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BottomText, "Congratulations!\nYou've found all landmarks!");
             CancelInvoke(nameof(UpdateGpsData));
             return;
         }
@@ -199,7 +217,7 @@ public class GPSController : MonoBehaviour
 
         if (GameManager.Instance.GameUI.BottomText != null)
         {
-            GameManager.Instance.GameUI.UpdateText($"Go find: {currentTarget.name}\n" +
+            GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BottomText, $"Go find: {currentTarget.name}\n" +
                              $"Lat: {currentLatitude:F6}\n" +
                              $"Lon: {currentLongitude:F6}\n" +
                              $"Dist to Target: {distanceToTarget:F1} meters");
@@ -225,7 +243,7 @@ public class GPSController : MonoBehaviour
     /// <param name="foundLandmark">The Landmark object that was just found.</param>
     void TriggerLandmarkEvent(Landmark foundLandmark)
     {
-        GameManager.Instance.GameUI.AppendText($"\n--- FOUND {foundLandmark.name}! ---");
+        GameManager.Instance.GameUI.AppendText(GameManager.Instance.GameUI.BottomText, $"\n--- FOUND {foundLandmark.name}! ---");
         if (foundLandmark.challenge != null)
         {
             Debug.Log("kill yourself");
@@ -293,5 +311,36 @@ public class GPSController : MonoBehaviour
 
         var d = R * c;
         return d;
+    }
+
+    private bool IsInsideAngledRect(GPSCoordinate point, RectZone zone)
+    {
+        if (zone.corners.Length < 4) return false;
+
+        double px = point.longitude;
+        double py = point.latitude;
+
+        double firstSign = GetSide(px, py, zone.corners[0], zone.corners[1]);
+
+        for (int i = 1; i < 4; i++)
+        {
+            GPSCoordinate corner1 = zone.corners[i];
+            GPSCoordinate corner2 = zone.corners[(i + 1) % 4];
+
+            double currentSign = GetSide(px, py, corner1, corner2);
+
+            if (firstSign != 0 && currentSign != 0 && firstSign != currentSign)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private double GetSide(double px, double py, GPSCoordinate c1, GPSCoordinate c2)
+    {
+        double val = (c2.longitude - c1.longitude) * (py - c1.latitude) - (c2.latitude - c1.latitude) * (px - c1.longitude);
+        return Math.Sign(val);
     }
 }

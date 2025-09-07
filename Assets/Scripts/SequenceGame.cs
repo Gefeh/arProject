@@ -11,6 +11,8 @@ public class SequenceGame : MonoBehaviour
     private void OnEnable()
     {
         Debug.Log("Enable seqeunce");
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BottomText, "Play the instruments in the right order by tapping them.");
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Played in right order {currentIndex}/{objects.Length}");
     }
 
     public void ObjectClicked(GameObject clickedObject)
@@ -23,6 +25,7 @@ public class SequenceGame : MonoBehaviour
         if (clickedObject == objects[currentIndex])
         {
             currentIndex++;
+            GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Played in right order {currentIndex}/{objects.Length}");
             Debug.Log("correct");
 
             // Check for win
@@ -36,13 +39,15 @@ public class SequenceGame : MonoBehaviour
                 else
                     ShowWinScreen();
 
-                currentIndex = 0; 
+                currentIndex = 0;
+                GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Played in right order {currentIndex}/{objects.Length}");
             }
         }
         else
         {
             Debug.Log("❌ Wrong choice! Start over.");
-            currentIndex = 0; 
+            currentIndex = 0;
+            GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Played in right order {currentIndex}/{objects.Length}");
         }
     }
 

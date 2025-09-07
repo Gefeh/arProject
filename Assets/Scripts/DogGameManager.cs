@@ -16,11 +16,6 @@ public class DogGameManager : MonoBehaviour
         Instance = this;
     }
 
-    void Start()
-    {
-        SpawnBone();
-    }
-
     public void SpawnBone()
     {
         if (currentBone != null) return;
@@ -45,6 +40,7 @@ public class DogGameManager : MonoBehaviour
     {
         hasBone = true;
         Debug.Log("Bone picked up");
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Bone Found 1/1\n" + $"Bone Given 0/1");
     }
 
     public void GiveBone()
@@ -52,6 +48,8 @@ public class DogGameManager : MonoBehaviour
         hasBone = false;
         animator.SetInteger("AnimationID", 5);
         Debug.Log("Bone Given");
+        GameManager.Instance.GameUI.UpdateText(GameManager.Instance.GameUI.BigNumber, $"Bone Found 1/1\n" + $"Bone Given 1/1");
+        GameManager.Instance.ChallengeManager.WinChallenge(this.gameObject);
     }
 
 }

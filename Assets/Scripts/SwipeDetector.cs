@@ -53,8 +53,8 @@ public class SwipeDetection : MonoBehaviour
                     {
                         // We hit something! Get the GameObject that was hit and toggle its lock state
                         // hit.collider.gameObject gives us the GameObject that owns the collider we hit
-                        ChainArea chainArea = hit.transform.gameObject.GetComponentInParent<ChainArea>();
-                        if (chainArea != null && chainArea.gameObject.GetComponent<BoxCollider>().bounds.IntersectRay(new Ray(ray.origin, hit.point - ray.origin), out float distance) && distance < (hit.point - ray.origin).magnitude) return;
+                        //ChainArea chainArea = hit.transform.gameObject.GetComponentInParent<ChainArea>();
+                        //if (chainArea != null && chainArea.gameObject.GetComponent<BoxCollider>().bounds.IntersectRay(new Ray(ray.origin, hit.point - ray.origin), out float distance) && distance < (hit.point - ray.origin).magnitude) return;
                         ChainController chainController = hit.transform.gameObject.GetComponentInParent<ChainController>();
                         if (chainController == null) return;
                         if (chainController.IsBroken()) return;

@@ -16,7 +16,7 @@ public class ChallengeManager : MonoBehaviour
         {
             challengeOrigin.SetActive(false);
         }
-        GameManager.Instance.CurrentChallengeCount++;
+        GameManager.Instance.IncreaseChallengeCount();
         GameManager.Instance.GPSController.currentChallengeIndex++;
         GameManager.Instance.GPSController.ResumeLandmarkHunt();
     }
